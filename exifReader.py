@@ -15,10 +15,6 @@ def get_exif_data(path):
     for tag_id in exif_data:
         tag = TAGS.get(tag_id, tag_id)
         data = exif_data.get(tag_id)
-
-        if isinstance(data, bytes):
-            data = data.decode()
-
         print(f"{tag}: {data}")
 
     print("\nLOCATION DATA")

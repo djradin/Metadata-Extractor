@@ -3,6 +3,8 @@
 # Then just added most of them just to at least give this program some sense of "catch all" ness.
 # Should've found like a way to make this a file instead of whatever this is but oh well.
 
+from magicByteSolver import zip_or_office, avi_or_wav
+
 signatures = {
     # Image Files
     "jpg": [b"\xFF\xD8\xFF"],
@@ -21,7 +23,7 @@ signatures = {
 
     # Audio Files
     "mp3": [b"\x49\x44\x33"],
-    "wav": [b"\x52\x49\x46\x46"],
+    "wav/avi": [b"\x52\x49\x46\x46"],
     "ogg": [b"\x4F\x67\x67\x53"],
     "midi": [b"\x4D\x54\x68\x64"],
 
@@ -41,6 +43,7 @@ signatures = {
     "gz": [b"\x1F\x8B"],
     "xz": [b"\xFD\x37\x7A\x58\x5A\x00"],
     "czx": [b"\x43\x5A\x50\x58"],
+    "zip/docx": [b"\x50\x4B\x03\x04", b"\x50\x4B\x05\x06", b"\x50\x4B\x07\x08"],
 
     # Icon files
     "ico": [b"\x00\x00\x01\x00"],
@@ -85,6 +88,13 @@ def detect_file_type(path):
     for filetype, signature in signatures.items():
         for sig in signature:
             if file_bytes.startswith(sig):
-                return filetype
+                detected_type = filetype
+
+                if detected_type == "zip/docx":
+                    detected_type = zip_or_office(path)
+                elif detected_type == "wav/avi":
+                    detected_type = avi_or_wav(path)
+
+                return detected_type
 
     return "unknown"

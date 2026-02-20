@@ -25,6 +25,8 @@ def diagnose_file(path):
 
     if ext != actual_type and actual_type != "unknown":
         print("File extension does not match actual file type.")
+    else:
+        print("File extension is correct.")
 
     # Route to handlers
     if actual_type in ["jpg"]:
