@@ -28,7 +28,7 @@ def diagnose_file(path):
     else:
         print("File extension is correct.")
 
-    # Route to handlers
+    # File specific metadata search
     if actual_type in ["jpg"]:
         get_exif_data(path)
 
