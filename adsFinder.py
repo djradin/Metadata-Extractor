@@ -29,14 +29,12 @@ def find_ads(path):
             except (IndexError, ValueError):
                 continue
 
-            print(f"ADS {count}: {name} ({size} bytes")
+            print(f"ADS {count}: {name} ({size} bytes)")
 
             ads_return_list.append({
                 "ads_number": count,
                 "name": name,
                 "size": size})
-            print(f"Ads size: {ads[0]} bytes")
-            print(f"Ads name: {ads[2]}")
     else:
         print("No alternate data streams found.")
 

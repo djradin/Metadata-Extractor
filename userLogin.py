@@ -24,8 +24,7 @@ def login_start():
     if not users:
         print("No users found.")
         print("Please create an account")
-        create_user()
-        return
+        return create_user()
 
     choices = ["login", "create user", "delete account"]
     choice = ""
@@ -92,6 +91,7 @@ def create_user():
     save_users(users)
     print(f"The {username} account has been created, you can now log in.")
     login("login")
+    return username
 
 def delete_account(username):
     users = load_users()
