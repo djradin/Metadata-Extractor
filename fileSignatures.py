@@ -1,5 +1,6 @@
 # To be updated as I go, though has most file types now tbh.
 # Sourced these via wikipedia https://en.wikipedia.org/wiki/List_of_file_signatures
+# And used ChatGPT to find the ones that share bytes, so I could make the functions to differentiate the two.
 # Then just added most of them just to at least give this program some sense of "catch all" ness.
 # Should've found like a way to make this a file instead of whatever this is but oh well.
 

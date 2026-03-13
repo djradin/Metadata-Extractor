@@ -1,4 +1,4 @@
-import os, time, hashlib
+import os, time, hashlib, fileSignatures, adsFinder, exifReader, mediaReader
 
 def get_basic_info(path):
     filenameUnsplit = os.path.basename(path)
@@ -34,3 +34,56 @@ def get_basic_info(path):
     print("\nFILE HASHES")
     print("MD5:", md5_hash.hexdigest())
     print("SHA1:", sha1_hash.hexdigest())
+
+    ## big ass list
+
+    metadata = {
+        "File Name" : filename,
+        "File Extension" : ext,
+        "File Size (bytes)" : filesize,
+        "Time Created" : time_create,
+        "Time Accessed" : time_access,
+        "Time Modified" : time_modified,
+        "MD5 Hash" : md5_hash.hexdigest(),
+        "SHA1 Hash" : sha1_hash.hexdigest()}
+
+    return metadata
+
+# Shoved this here since it was getting annoying to work around.
+
+def diagnose_file(path):
+    if not os.path.isfile(path):
+        print("File does not exist.")
+        return
+
+    metadata = {}
+
+    filename, ext = os.path.splitext(path)
+    ext = ext.lower().replace(".", "")
+
+    actual_type = fileSignatures.detect_file_type(path)
+
+    basic_info = get_basic_info(path)
+    metadata.update(basic_info)
+
+    ads_info = adsFinder.find_ads(path)
+    if ads_info:
+        metadata.update(ads_info)
+
+    print("\nFILE TYPE CHECK")
+    print("Extension File Type:", ext)
+    print("Actual File Type:", actual_type)
+
+    if ext != actual_type and actual_type != "unknown":
+        print("File extension does not match actual file type.")
+    else:
+        print("File extension is correct.")
+
+    # File specific metadata search
+    if actual_type in ["jpg"]:
+        exifReader.get_exif_data(path)
+
+    elif actual_type in ["mp4", "mov", "mp3", "wav", "ogg"]:
+        mediaReader.get_media_data(path)
+
+    return metadata
