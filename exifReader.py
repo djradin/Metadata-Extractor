@@ -6,6 +6,7 @@ import reverse_geocode
 
 
 def get_exif_data(path):
+    exif_output = {}
     exif_file = Image.open(path)
     exif_data = exif_file.getexif()
     gps_data = exif_data.get_ifd(0x8825)
@@ -14,11 +15,12 @@ def get_exif_data(path):
         print("\nEXIF DATA")
     else:
         print("\nNO EXIF DATA FOUND")
-        return
+        return None
 
     for tag_id in exif_data:
         tag = TAGS.get(tag_id, tag_id)
         data = exif_data.get(tag_id)
+        exif_output[tag] = data
         print(f"{tag}: {data}")
 
     print("\nLOCATION DATA")
@@ -59,3 +61,13 @@ def get_exif_data(path):
         # The web link stuff
         print(f"Google maps link: https://www.google.com/maps?q={lat_val},{lon_val}")
         print(f"What 3 words link: https://what3words.com/{lat_val},{lon_val}")
+
+        return {
+            "exif": exif_output,
+            "gps": {
+                "country": country,
+                "city": city,
+                "latitude": lat_val,
+                "longitude": lon_val
+            }
+        }

@@ -58,17 +58,29 @@ def diagnose_file(path):
 
     metadata = {}
 
+    basic_info = get_basic_info(path)
+    metadata["basic_info"] = basic_info
+
+    ads_info = adsFinder.find_ads(path)
+    metadata["ads"] = ads_info
+
+    actual_type = fileSignatures.detect_file_type(path)
+    metadata["file_type"] = actual_type
+
     filename, ext = os.path.splitext(path)
     ext = ext.lower().replace(".", "")
 
-    actual_type = fileSignatures.detect_file_type(path)
+    if actual_type in ["jpg"]:
+        exif_data = exifReader.get_exif_data(path)
+        metadata["exif"] = exif_data
+    else:
+        metadata["exif"] = None
 
-    basic_info = get_basic_info(path)
-    metadata.update(basic_info)
-
-    ads_info = adsFinder.find_ads(path)
-    if ads_info:
-        metadata.update(ads_info)
+    if actual_type in ["mp4", "mov", "mp3", "wav", "ogg"]:
+        media_data = mediaReader.get_media_data(path)
+        metadata["media"] = media_data
+    else:
+        metadata["media"] = None
 
     print("\nFILE TYPE CHECK")
     print("Extension File Type:", ext)
@@ -78,12 +90,5 @@ def diagnose_file(path):
         print("File extension does not match actual file type.")
     else:
         print("File extension is correct.")
-
-    # File specific metadata search
-    if actual_type in ["jpg"]:
-        exifReader.get_exif_data(path)
-
-    elif actual_type in ["mp4", "mov", "mp3", "wav", "ogg"]:
-        mediaReader.get_media_data(path)
 
     return metadata
