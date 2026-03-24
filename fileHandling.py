@@ -1,10 +1,18 @@
 import os
 import json
+import shutil
+from pathlib import Path
 
 def create_folder(username):
-    output_folder  = f"output/{username}"
+    output_folder  = f"user_data/output/{username}"
     os.makedirs(output_folder, exist_ok = True)
     return output_folder
+
+def delete_folder(username):
+    output_folder = Path("user_data/output") / username
+    if output_folder.exists() and output_folder.is_dir():
+        shutil.rmtree(output_folder)
+    return
 
 def save_file(current_user, metadata):
     output_filename = metadata["basic_info"]["File Name"]

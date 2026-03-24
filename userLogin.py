@@ -1,10 +1,17 @@
 from typing import TextIO
 
 import bcrypt
+from pathlib import Path
 import json
 import os
 
-user_file = "users.json"
+
+base_directory = Path(__file__).resolve().parent
+
+data_directory =  base_directory / "user_data"
+data_directory.mkdir(exist_ok=True)
+
+user_file = base_directory / "user_data" / "users.json"
 
 def load_users():
     if not os.path.exists(user_file):
