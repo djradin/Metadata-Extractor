@@ -10,6 +10,7 @@ class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Sign In")
+        self.setFixedSize(300, 200)
 
         layout = QVBoxLayout()
 
@@ -65,7 +66,7 @@ class LoginWindow(QWidget):
 
     def create_account(self):
         username = self.username_input.text()
-        password = self.username_input.text()
+        password = self.password_input.text()
 
         users = userLogin.load_users()
 
@@ -81,7 +82,15 @@ class LoginWindow(QWidget):
             QMessageBox.warning(self, "Error", "Password cannot be left blank.")
             return
 
-        if username  == "Sheldon":
+        if password == "password":
+            QMessageBox.warning(self, "Error", "Password cannot be 'password'.")
+            return
+
+        if len(password) < 6:
+            QMessageBox.warning(self, "Error", "Password must be 6 characters or longer.")
+            return
+
+        if username.lower()  == "sheldon":
             QMessageBox.warning(self, "Bazinga", "Bazinga")
             return
 
