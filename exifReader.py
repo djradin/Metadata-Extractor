@@ -71,3 +71,15 @@ def get_exif_data(path):
                 "longitude": lon_val
             }
         }
+
+def get_png_data(path):
+    img = Image.open(path)
+    metadata = img.info
+
+    if not metadata:
+        return None
+
+    # was going to print all the data here but there's no point now
+    print("png metadata acquired")
+
+    return metadata

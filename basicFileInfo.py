@@ -76,6 +76,12 @@ def diagnose_file(path):
     else:
         metadata["exif"] = None
 
+    if actual_type in ["png"]:
+        png_data = exifReader.get_png_data(path)
+        metadata["png"] = png_data
+    else:
+        metadata["png"] = None
+
     if actual_type in ["mp4", "mov", "mp3", "wav", "ogg"]:
         media_data = mediaReader.get_media_data(path)
         metadata["media"] = media_data

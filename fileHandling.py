@@ -4,14 +4,16 @@ import shutil
 from pathlib import Path
 
 def create_folder(username):
-    output_folder  = f"user_data/output/{username}"
-    os.makedirs(output_folder, exist_ok = True)
-    return output_folder
+    root = Path(__file__).parent
+    path = root / "user_data" / "output" / username
+    os.makedirs(path, exist_ok = True)
+    return path
 
 def delete_folder(username):
-    output_folder = Path("user_data/output") / username
-    if output_folder.exists() and output_folder.is_dir():
-        shutil.rmtree(output_folder)
+    root = Path(__file__).parent
+    path = root / "user_data" / "output" / username
+    if path.exists() and path.is_dir():
+        shutil.rmtree(path)
     return
 
 def save_file(current_user, metadata):
@@ -43,5 +45,21 @@ def load_file(current_user, filename):
         print("File not found.")
         return None
 
+    with open(path, "r") as f:
+        return json.load(f)
+
+def save_settings(username, settings):
+    root = Path(__file__).parent
+    path = root / "user_data" / "settings" / f"{username}.json"
+    os.makedirs(path.parent, exist_ok=True)
+
+    with open(path, "w") as f:
+        json.dump(settings, f, indent = 4)
+
+def load_settings(username):
+    root = Path(__file__).parent
+    path = root / "user_data" / "settings" / f"{username}.json"
+    if not os.path.exists(path):
+        return {}
     with open(path, "r") as f:
         return json.load(f)

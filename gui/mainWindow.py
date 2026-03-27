@@ -1,10 +1,7 @@
-import sys, json
+import sys, json, fileHandling, basicFileInfo
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import (QApplication, QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
                                QFileDialog, QMessageBox, QSplitter, QListWidget)
-import basicFileInfo
-import fileHandling
-import userLogin
 from gui.loginWIndow import LoginWindow
 from gui.settingsWindow import SettingsWindow
 
@@ -88,7 +85,6 @@ class MainWindow(QWidget):
     def set_current_user(self, username):
         self.current_user = username
         self.label.setText(f"Current user: {username}")
-
         self.pop_file_list()
 
     def logout(self):
@@ -100,8 +96,8 @@ class MainWindow(QWidget):
         self.login_window.password_input.clear()
 
     def settings(self):
+        self.settings_window.set_current_user(self.current_user)
         self.settings_window.show()
-
 
     def diagnose_file(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
@@ -131,6 +127,14 @@ class MainWindow(QWidget):
         if data:
             formatted = json.dumps(data, indent=4)
             self.display.setText(formatted)
+
+    def closeEvent(self, event):
+        if self.settings_window.delete_data_on_exit.isChecked():
+            print("close event triggered.")
+            if self.current_user:
+                fileHandling.delete_folder(self.current_user)
+
+        event.accept()
 
 
 
