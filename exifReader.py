@@ -4,7 +4,6 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 import reverse_geocode
 
-
 def get_exif_data(path):
     exif_output = {}
     exif_file = Image.open(path)
@@ -63,12 +62,14 @@ def get_exif_data(path):
         print(f"What 3 words link: https://what3words.com/{lat_val},{lon_val}")
 
         return {
-            "exif": exif_output,
-            "gps": {
+            "exif tags": exif_output,
+            "gps data": {
                 "country": country,
                 "city": city,
                 "latitude": lat_val,
-                "longitude": lon_val
+                "longitude": lon_val,
+                "google maps link": f"https://www.google.com/maps?q={lat_val},{lon_val}",
+                "what 3 words link": f"https://what3words.com/{lat_val},{lon_val}"
             }
         }
 

@@ -62,31 +62,33 @@ def diagnose_file(path):
     metadata["basic_info"] = basic_info
 
     ads_info = adsFinder.find_ads(path)
-    metadata["ads"] = ads_info
-
-    actual_type = fileSignatures.detect_file_type(path)
-    metadata["file_type"] = actual_type
+    if ads_info:
+        metadata["ads"] = ads_info
 
     filename, ext = os.path.splitext(path)
     ext = ext.lower().replace(".", "")
+    actual_type = fileSignatures.detect_file_type(path)
+
+    if ext != actual_type and actual_type != "unknown":
+        match = "extension has been changed"
+    else:
+        match = "extension is correct"
+
+    file_type_info = {"file_type": actual_type, "file_extension": match}
+
+    metadata["file_extension_integrity"] = file_type_info
 
     if actual_type in ["jpg"]:
         exif_data = exifReader.get_exif_data(path)
         metadata["exif"] = exif_data
-    else:
-        metadata["exif"] = None
 
     if actual_type in ["png"]:
         png_data = exifReader.get_png_data(path)
         metadata["png"] = png_data
-    else:
-        metadata["png"] = None
 
     if actual_type in ["mp4", "mov", "mp3", "wav", "ogg"]:
         media_data = mediaReader.get_media_data(path)
         metadata["media"] = media_data
-    else:
-        metadata["media"] = None
 
     print("\nFILE TYPE CHECK")
     print("Extension File Type:", ext)

@@ -29,7 +29,10 @@ def save_file(current_user, metadata):
 
 
     with open(output_path, "w") as f:
-        json.dump(metadata, f)
+        json_data = json_convert(metadata)
+        print(metadata)
+        print(json_data)
+        json.dump(json_data, f)
 
     print(f"Saved data to: {output_path}")
 
@@ -63,3 +66,15 @@ def load_settings(username):
         return {}
     with open(path, "r") as f:
         return json.load(f)
+
+def json_convert(data):
+    if isinstance(data, dict):
+        return {str(k): json_convert(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [json_convert(v) for v in data]
+    elif isinstance(data, bytes):
+        return data.decode(errors="ignore")
+    elif hasattr(data, "numerator") and hasattr(data, "denominator"):
+        return float(data)
+    else:
+        return data
