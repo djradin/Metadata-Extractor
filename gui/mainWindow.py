@@ -94,8 +94,14 @@ class MainWindow(QWidget):
             self.apply_theme(theme)
 
     def logout(self):
+        if self.settings_window.delete_data_on_exit.isChecked():
+            print("file info deleted")
+            if self.current_user:
+                fileHandling.delete_folder(self.current_user)
         self.current_user = None
         self.label.setText("No user logged in.")
+        self.display.clear()
+        self.file_list.clear()
         self.hide()
         self.login_window.show()
         self.login_window.username_input.clear()
@@ -120,7 +126,7 @@ class MainWindow(QWidget):
 
     def pop_file_list(self):
         self.file_list.clear()
-
+        self.display.clear()
         files = fileHandling.list_files(self.current_user)
 
         for f in files:
@@ -257,6 +263,7 @@ def run_app():
     main_window = MainWindow(login_window, settings_window)
     main_window.hide()  # hide until login succeeds
     settings_window.theme_changed.connect(main_window.apply_theme)
+    settings_window.files_changed.connect(main_window.pop_file_list)
 
     def login_success(username):
         main_window.set_current_user(username)

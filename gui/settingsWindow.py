@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel,
 class SettingsWindow(QWidget):
 
     theme_changed = Signal(str)
+    files_changed = Signal()
 
     def __init__(self, /):
         super().__init__()
@@ -23,7 +24,7 @@ class SettingsWindow(QWidget):
         self.themes = QComboBox()
         self.themes.addItems(["Default", "Dark", "Dark Blue", "Dark Purple", "Eye Sore"])
         self.cat2 = QLabel("Data Settings")
-        self.delete_data_on_exit = QCheckBox("Delete Data When Exiting App")
+        self.delete_data_on_exit = QCheckBox("Delete Data When Exiting Session")
         self.delete_data = QPushButton("Delete User Data")
         self.reset_settings = QPushButton("Reset Settings")
         self.close_settings = QPushButton("Save and Close")
@@ -51,6 +52,7 @@ class SettingsWindow(QWidget):
 
     def delete_data_function(self):
         fileHandling.delete_folder(self.current_user)
+        self.files_changed.emit()
         QMessageBox.information(self, "User Data Deleted.", "The user data has been deleted.")
 
     def set_current_user(self, username):
