@@ -1,4 +1,6 @@
-import os, time, hashlib, fileSignatures, adsFinder, exifReader, mediaReader
+import os, time, hashlib
+from framework import adsFinder, fileSignatures, exifReader, mediaReader
+
 
 def get_basic_info(path):
     filenameUnsplit = os.path.basename(path)

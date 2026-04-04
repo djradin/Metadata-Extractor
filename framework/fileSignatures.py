@@ -4,7 +4,7 @@
 # Then just added most of them just to at least give this program some sense of "catch all" ness.
 # Should've found like a way to make this a file instead of whatever this is but oh well.
 
-from magicByteSolver import zip_or_office, avi_or_wav
+from framework.magicByteSolver import zip_or_office, avi_or_wav
 
 signatures = {
     # Image Files

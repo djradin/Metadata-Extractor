@@ -1,7 +1,7 @@
-import sys
 from PySide6.QtWidgets import (QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox)
 from PySide6.QtCore import Signal
-import userLogin, fileHandling
+from framework import fileHandling, userLogin
+
 
 class LoginWindow(QWidget):
 

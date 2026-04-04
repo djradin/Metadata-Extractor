@@ -1,5 +1,5 @@
-import sys, json, fileHandling, basicFileInfo
-from textwrap import indent
+import sys
+from framework import basicFileInfo, fileHandling
 
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import (QApplication, QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
@@ -15,7 +15,7 @@ from gui.settingsWindow import SettingsWindow
 class MainWindow(QWidget):
     def __init__(self, login_window, settings_window):
         super().__init__()
-
+        self.setAcceptDrops(True)
         self.login_window = login_window
         self.settings_window = settings_window
         self.current_user = None
@@ -42,7 +42,7 @@ class MainWindow(QWidget):
         left_widget = QWidget()
         left_layout = QVBoxLayout()
 
-        self.diagnose_button = QPushButton("Add File")
+        self.diagnose_button = QPushButton("Add Files")
         self.file_list = QListWidget()
 
         left_layout.addWidget(self.label)
@@ -112,15 +112,19 @@ class MainWindow(QWidget):
         self.settings_window.show()
 
     def diagnose_file(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
+        file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Files")
 
-        if not file_path:
+        if not file_paths:
             return
 
-        metadata = basicFileInfo.diagnose_file(file_path)
-        fileHandling.save_file(self.current_user, metadata)
+        for file_path in file_paths:
+            metadata = basicFileInfo.diagnose_file(file_path)
+            fileHandling.save_file(self.current_user, metadata)
 
-        QMessageBox.information(self, "Success", "File processed and saved.")
+        if len(file_paths) > 1:
+            QMessageBox.information(self, "Success", "Files processed and saved.")
+        else:
+            QMessageBox.information(self, "Success", "File processed and saved.")
 
         self.pop_file_list()
 
@@ -240,6 +244,33 @@ class MainWindow(QWidget):
         else:
             lines.append(f"{prefix}- {data}")
         return lines
+
+    def dragEnterEvent(self, event, /):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event, /):
+        if not self.current_user:
+            return
+
+        url_count = event.mimeData().urls()
+
+        for url in event.mimeData().urls():
+            filepath = url.toLocalFile()
+
+            if filepath:
+                metadata = basicFileInfo.diagnose_file(filepath)
+                fileHandling.save_file(self.current_user, metadata)
+
+        if len(url_count) > 1:
+            QMessageBox.information(self, "Success", "Files processed and saved.")
+        else:
+            QMessageBox.information(self, "Success", "File processed and saved.")
+
+        self.pop_file_list()
+
 
 
     def closeEvent(self, event):

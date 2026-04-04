@@ -1,12 +1,10 @@
-from typing import TextIO
-
 import bcrypt
 from pathlib import Path
 import json
 import os
 
 
-base_directory = Path(__file__).resolve().parent
+base_directory = Path(__file__).resolve().parent.parent
 
 data_directory =  base_directory / "user_data"
 data_directory.mkdir(exist_ok=True)

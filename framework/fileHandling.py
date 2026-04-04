@@ -4,13 +4,13 @@ import shutil
 from pathlib import Path
 
 def create_folder(username):
-    root = Path(__file__).parent
+    root = Path(__file__).parent.parent
     path = root / "user_data" / "output" / username
     os.makedirs(path, exist_ok = True)
     return path
 
 def delete_folder(username):
-    root = Path(__file__).parent
+    root = Path(__file__).parent.parent
     path = root / "user_data" / "output" / username
     if path.exists() and path.is_dir():
         shutil.rmtree(path)
@@ -52,7 +52,7 @@ def load_file(current_user, filename):
         return json.load(f)
 
 def save_settings(username, settings):
-    root = Path(__file__).parent
+    root = Path(__file__).parent.parent
     path = root / "user_data" / "settings" / f"{username}.json"
     os.makedirs(path.parent, exist_ok=True)
 
@@ -60,7 +60,7 @@ def save_settings(username, settings):
         json.dump(settings, f, indent = 4)
 
 def load_settings(username):
-    root = Path(__file__).parent
+    root = Path(__file__).parent.parent
     path = root / "user_data" / "settings" / f"{username}.json"
     if not os.path.exists(path):
         return {}

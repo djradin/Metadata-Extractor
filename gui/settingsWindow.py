@@ -1,7 +1,7 @@
-import sys, json, fileHandling
+from framework import fileHandling
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel,
-                               QFileDialog, QMessageBox, QSplitter, QCheckBox, QComboBox)
+                               QMessageBox, QCheckBox, QComboBox)
 
 class SettingsWindow(QWidget):
 
