@@ -3,7 +3,7 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel,
                                QMessageBox, QCheckBox, QComboBox)
 from PySide6.QtGui import QFont
-from changePasswordWindow import ChangePasswordWindow
+from gui.changePasswordWindow import ChangePasswordWindow
 
 class SettingsWindow(QWidget):
 
