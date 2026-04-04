@@ -42,12 +42,22 @@ def get_basic_info(path):
     metadata = {
         "File Name" : filename,
         "File Extension" : ext,
-        "File Size (bytes)" : filesize,
+        "File Size (bytes)" : filesize
+    }
+
+    if filesizeKB >= 1:
+        metadata["File Size (KB)"] = filesizeKB
+    if filesizeMB >= 1:
+        metadata["File Size (MB)"] = filesizeMB
+    if filesizeGB >= 1:
+        metadata["File Size (GB)"] = filesizeGB
+
+    metadata.update({
         "Time Created" : time_create,
         "Time Accessed" : time_access,
         "Time Modified" : time_modified,
         "MD5 Hash" : md5_hash.hexdigest(),
-        "SHA1 Hash" : sha1_hash.hexdigest()}
+        "SHA1 Hash" : sha1_hash.hexdigest()})
 
     return metadata
 

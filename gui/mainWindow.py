@@ -1,7 +1,7 @@
 import sys
 from framework import basicFileInfo, fileHandling
 
-from PySide6.QtGui import Qt
+from PySide6.QtGui import Qt, QFont
 from PySide6.QtWidgets import (QApplication, QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
                                QFileDialog, QMessageBox, QSplitter, QListWidget)
 from gui.loginWIndow import LoginWindow
@@ -93,6 +93,11 @@ class MainWindow(QWidget):
             theme = settings.get("theme", "Default")
             self.apply_theme(theme)
 
+            big = settings.get("big_text", False)
+            bold = settings.get("bold_text", False)
+            self.apply_text(big, bold)
+
+
     def logout(self):
         if self.settings_window.delete_data_on_exit.isChecked():
             print("file info deleted")
@@ -145,84 +150,118 @@ class MainWindow(QWidget):
             self.display.setText(formatted)
 
     def apply_theme(self, theme):
+
+        big = fileHandling.load_settings(self.current_user).get("big_text", False)
+        bold = fileHandling.load_settings(self.current_user).get("bold_text", False)
+
+        font_size = 16 if big else 10
+        font_boldness = "bold" if bold else "normal"
+
         if theme == "Dark":
-            self.setStyleSheet("""
-                        QWidget {
+            self.setStyleSheet(f"""
+                        QWidget {{
                             background-color: #2a2a2a;
                             color: white;
-                        }
-                        QPushButton {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QPushButton {{
                             background-color: #444;
                             color: white;
                             border: none;
                             padding: 5px;
-                        }
-                        QComboBox {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QComboBox {{
                             background-color: #444;
                             color: white;
                             border: none;
                             padding: 5px;
-                        }
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
                     """)
         elif theme == "Dark Blue":
-            self.setStyleSheet("""
-                        QWidget {
+            self.setStyleSheet(f"""
+                        QWidget {{
                             background-color: #0d1b2a;
                             color: white;
-                        }
-                        QPushButton {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QPushButton {{
                             background-color: #1a2640;
                             color: white;
                             border: none;
                             padding: 5px;
-                        }
-                        QComboBox {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QComboBox {{
                             background-color: #1a2640;
                             color: white;
                             border: none;
                             padding: 5px;
-                        }
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
                     """)
         elif theme == "Dark Purple":
-            self.setStyleSheet("""
-                        QWidget {
+            self.setStyleSheet(f"""
+                        QWidget {{
                             background-color: #2b2d42;
                             color: white;
-                        }
-                        QPushButton {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QPushButton {{
                             background-color: #5a5f9e;
                             color: white; 
                             border: none;
                             padding: 5px;
-                        }
-                        QComboBox {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QComboBox {{
                             background-color: #5a5f9e;
                             color: white; 
                             border: none;
                             padding: 5px;
-                        }
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
                     """)
         elif theme == "Eye Sore":
-            self.setStyleSheet("""
-                        QWidget {
+            self.setStyleSheet(f"""
+                        QWidget {{
                             background-color: #fafefa;
                             color: #0000ff;
-                        }
-                        QPushButton {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QPushButton {{
                             background-color: #ffaa00;
                             color: #0000ff; 
                             border: none;
                             padding: 1px;
-                        }
-                        QComboBox {
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
+                        QComboBox {{
                             background-color: #ad72fe;
                             color: #00ff00; 
                             border: none;
                             padding: 2px;
-                        }
+                            font-size: {font_size}pt;
+                            font-weight: {font_boldness};
+                        }}
                     """)
         else:
             self.setStyleSheet("")
+            if self.current_user:
+                settings = fileHandling.load_settings(self.current_user)
+                self.apply_text(settings.get("big_text", False), settings.get("bold_text", False))
 
     def format_data(self, data, indent = 0):
         lines = []
@@ -271,6 +310,18 @@ class MainWindow(QWidget):
 
         self.pop_file_list()
 
+    def apply_text(self, big, bold):
+        font = QFont()
+
+        if big:
+            font.setPointSize(16)
+        else:
+            font.setPointSize(10)
+
+        font.setBold(bold)
+
+        self.setFont(font)
+
 
 
     def closeEvent(self, event):
@@ -295,10 +346,11 @@ def run_app():
     main_window.hide()  # hide until login succeeds
     settings_window.theme_changed.connect(main_window.apply_theme)
     settings_window.files_changed.connect(main_window.pop_file_list)
+    settings_window.text_changed.connect(main_window.apply_text)
 
     def login_success(username):
         main_window.set_current_user(username)
-        main_window.show()
+        main_window.showMaximized()
 
     login_window.login_success.connect(login_success)
     login_window.show()
