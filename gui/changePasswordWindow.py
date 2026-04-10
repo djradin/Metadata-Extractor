@@ -1,6 +1,5 @@
-from PySide6.QtWidgets import (QApplication, QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
-                               QFileDialog, QMessageBox, QSplitter, QListWidget, QLineEdit)
-from framework import fileHandling, userLogin
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox, QLineEdit
+from framework import userLogin
 
 class ChangePasswordWindow(QWidget):
     def __init__(self, username):

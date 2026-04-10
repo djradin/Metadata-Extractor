@@ -83,10 +83,14 @@ class SettingsWindow(QWidget):
         self.delete_data_on_exit.setChecked(False)
         self.themes.setCurrentText("Default")
         self.apply_theme("Default")
+        self.big_text.setChecked(False)
+        self.bold_text.setChecked(False)
 
         settings = {
             "delete_on_exit": False,
-            "theme": "Default"
+            "theme": "Default",
+            "big_text": False,
+            "bold_text": False
         }
         fileHandling.save_settings(self.current_user, settings)
 
