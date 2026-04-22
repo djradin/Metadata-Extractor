@@ -4,12 +4,16 @@ import json
 import os
 
 
-base_directory = Path(__file__).resolve().parent.parent
+appdata_root = Path(os.getenv("LOCALAPPDATA")) / "MetadataExtractor"
 
-data_directory =  base_directory / "user_data"
+data_directory =  appdata_root / "user_data"
 data_directory.mkdir(exist_ok=True)
 
-user_file = base_directory / "user_data" / "users.json"
+user_file = appdata_root / "user_data" / "users.json"
+
+#Testing
+print("appdata root =", appdata_root)
+print("data directory =", data_directory)
 
 def load_users():
     if not os.path.exists(user_file):

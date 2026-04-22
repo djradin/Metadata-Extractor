@@ -3,15 +3,20 @@ import json
 import shutil
 from pathlib import Path
 
+appdata_root = Path(os.getenv("LOCALAPPDATA")) / "MetadataExtractor"
+output_folder = appdata_root / "output"
+settings_folder = appdata_root / "settings"
+
+os.makedirs(output_folder, exist_ok=True)
+os.makedirs(settings_folder, exist_ok=True)
+
 def create_folder(username):
-    root = Path(__file__).parent.parent
-    path = root / "user_data" / "output" / username
+    path = output_folder / username
     os.makedirs(path, exist_ok = True)
     return path
 
 def delete_folder(username):
-    root = Path(__file__).parent.parent
-    path = root / "user_data" / "output" / username
+    path = output_folder / username
     if path.exists() and path.is_dir():
         shutil.rmtree(path)
     return
@@ -52,16 +57,14 @@ def load_file(current_user, filename):
         return json.load(f)
 
 def save_settings(username, settings):
-    root = Path(__file__).parent.parent
-    path = root / "user_data" / "settings" / f"{username}.json"
+    path = settings_folder / f"{username}.json"
     os.makedirs(path.parent, exist_ok=True)
 
     with open(path, "w") as f:
         json.dump(settings, f, indent = 4)
 
 def load_settings(username):
-    root = Path(__file__).parent.parent
-    path = root / "user_data" / "settings" / f"{username}.json"
+    path = settings_folder / f"{username}.json"
     if not os.path.exists(path):
         return {}
     with open(path, "r") as f:
